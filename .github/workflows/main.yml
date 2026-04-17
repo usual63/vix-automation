@@ -1,12 +1,12 @@
-name: Integrated-Strategy-Automation
+name: VIX-Automation
 
 on:
   schedule:
-    - cron: '5 22 * * *' # 한국 시간 오전 7:05 (매일 자동 실행)
-  workflow_dispatch: # 수동 실행 버튼
+    - cron: '5 22 * * *' # UTC 22:05 (한국 시간 오전 7:05)
+  workflow_dispatch: # 직접 실행 버튼
 
 jobs:
-  run-strategies:
+  run-strategy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,14 +15,9 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install pandas requests yfinance pytz
-      - name: Run VIX Strategy
+        run: pip install -r requirements.txt
+      - name: Run Script
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python vix_strategy.py
-      - name: Run MSTR Strategy
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
-        run: python mstr_strategy.py
